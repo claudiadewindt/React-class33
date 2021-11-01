@@ -1,0 +1,17 @@
+* {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+.city-list {
+  margin: 0 auto;
+  list-style-type: none;
+  width: 25%;
+}
+
+.city {
+  border: 2px solid black;
+  padding: 10px;
+  padding-left: 30px;
+  margin: 30px;
+}
