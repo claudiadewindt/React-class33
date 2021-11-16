@@ -1,8 +1,8 @@
 import { render, fireEvent, screen } from '@testing-library/react';
-import SearchForm from '../SearchForm';
+import WeatherData from './WeatherData';
 
 test('renders the search form', async () => {
-  const { getByRole } = render(<SearchForm />);
+  const { getByRole } = render(<WeatherData />);
 
   const search_city = getByRole('button');
 
