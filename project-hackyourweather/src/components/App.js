@@ -1,5 +1,5 @@
 import './App.css';
-import WeatherData from './WeatherData';
+import WeatherDataController from './WeatherDataController';
 import Chart from './Chart';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <h1>Weather</h1>
-            <WeatherData />
+            <WeatherDataController />
           </Route>
 
           <Route
