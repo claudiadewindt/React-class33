@@ -1,0 +1,38 @@
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+input {
+  width: 400px;
+  height: 40px;
+  border-radius: 10px;
+  border: solid 2px #000;
+  padding: 0 10px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-button {
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+  border: solid 2px #000;
+  padding: 0 10px;
+  font-size: 16px;
+  outline: none;
+  background-color: rgb(230, 230, 230);
+  color: black;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  input {
+    width: 300px;
+  }
+}

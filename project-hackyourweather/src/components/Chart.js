@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import './Chart.css';
+
+import { format } from 'date-fns';
 
 import {
   AreaChart,
@@ -11,61 +14,82 @@ import {
 import { useParams, Link } from 'react-router-dom';
 
 const Chart = () => {
-  const [city, setCity] = useState({});
-  const [weatherData, setWeatherData] = useState({});
+  const [chartData, setChartData] = useState([]);
+  const [cityName, setCityName] = useState('');
   const { cityId } = useParams();
 
   useEffect(() => {
-    const url = `https://api.openweathermap.org/data/2.5/forecast?id=${cityId}&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?id=${cityId}&units=metric&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`;
 
-    const fetchData = async () => {
+    async function fetchData() {
       try {
-        const response = await fetch(url);
-        const data = await response.json();
-        setWeatherData(data.list);
-        setCity(data.city);
+        const res = await fetch(url);
+        const dailyForecast = await res.json();
+        if (res.status !== 200) throw new Error(dailyForecast.message);
+        setChartData(
+          dailyForecast.list.map((threeHours) => {
+            const { dt, main } = threeHours;
+            return {
+              date: format(new Date(dt * 1000), 'MMM dd'),
+              time: format(new Date(dt * 1000), 'HH:mm'),
+              temp: main.temp,
+            };
+          }),
+        );
+
+        setCityName(
+          `${dailyForecast.city.name}, ${dailyForecast.city.country}`,
+        );
       } catch (error) {
-        console.log('error', error);
+        console.error(error);
       }
-    };
+    }
 
     fetchData();
-  }, [cityId]);
+  }, [chartData, cityId]);
 
   return (
-    <>
-      <header className="title">
-        <h1>5 days Forecast</h1>
-      </header>
-      <main className="container">
-        <h1 data-testid="city">
-          {city.name} , {city.country}
-        </h1>
+    <div className="chart">
+      <h1>5 days forecast for </h1>
+      <h2>{cityName}</h2>
 
-        <AreaChart
-          className="chart"
-          data-testid="chart"
-          width={750}
-          height={500}
-          data={weatherData}
-        >
-          <CartesianGrid stroke="#f5f5f5" />
-          <XAxis dataKey="dt_txt" />
-          <YAxis />
-          <Tooltip />
-          <Area
-            type="monotone"
-            name="temp"
-            dataKey="main.temp"
-            stroke="#8554d8"
-            fill="#8714d8"
-          />
-        </AreaChart>
-        <h4>
-          <Link to="/"> Go To Home Page</Link>
-        </h4>
-      </main>
-    </>
+      <AreaChart
+        className="area-chart"
+        width={800}
+        height={300}
+        data={chartData}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid />
+
+        <XAxis dataKey="date" stroke="purple" id="x-axis" tickCount={5} />
+        <YAxis
+          dataKey="temp"
+          stroke={false}
+          unit="°"
+          type="number"
+          tickCount="5"
+        />
+        <Tooltip />
+        <Area
+          type="monotone"
+          dataKey="temp"
+          stroke="blue"
+          strokeWidth="4"
+          fill="blue"
+        />
+        <Area type="monotone" dataKey="time" />
+      </AreaChart>
+
+      <h4>
+        <Link to="/"> Go To Home Page</Link>
+      </h4>
+    </div>
   );
 };
 
